@@ -1,0 +1,10 @@
+1; Banana Bread; 13,00
+2; Bolo Red Valved; 17,00
+3; Choux Classica; 15,00
+4; Cinnamon Roll; 13,00
+5; Cookies; 9,00
+6; Torta de Ninho com Nutella; 17,00
+7; Brownie com Nozes; 16,00
+8; Acai com Acompanhamentos; 16,00
+9; Petit Gateau; 29,90
+10; Bolo de Pote; 14,90
