@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <locale.h>
 
-// Declaração das constantes
-#define msgEscolherOpcao " Escolha uma das opções para continuar: "
+// Declaraï¿½ï¿½o das constantes
+#define msgEscolherOpcao " Escolha uma das opï¿½ï¿½es para continuar: "
 #define quantidade 15
 #define tamanhoNome 30
 
-// Protótipos das funções/procedimentos
+// Protï¿½tipos das funï¿½ï¿½es/procedimentos
 void sair();
 void opcaoInvalida();
 void fazerPedido();
@@ -16,12 +16,19 @@ void cardapioComidas();
 void cardapioBebidas();
 void cardapioSobremesas();
 
-// Declaração de structs
+// Declaraï¿½ï¿½o de structs
 typedef struct
 {
     int id[quantidade];
     char nome[tamanhoNome];
 } dadosPedido;
+
+typedef struct
+{
+    int id;
+    char prato[30];
+    float preco;
+} Comidas;
 
 int main()
 {
@@ -34,7 +41,7 @@ int main()
         if (opcoes_inicio >= 0 && opcoes_inicio <= 2)
         {
             printf("\n===========================================\n");
-            printf(" Olá! Seja bem vindo ao nosso sistema!\n O que deseja fazer?");
+            printf(" Olï¿½! Seja bem vindo ao nosso sistema!\n O que deseja fazer?");
             printf("\n===========================================\n");
             printf(" 1 - Fazer pedido\n 2 - Fechar a conta\n 0 - Sair");
             printf("\n===========================================\n");
@@ -59,28 +66,28 @@ int main()
             break;
         }
 
-        // obs dev: pensei em adicionar a opção "excluir pedido"
-        // obs dev: se der tempo, talvez colocar a opção de "editar pedido"
-        // Motivo: trabalhar com exclusão e edição de itens no arquivo
+        // obs dev: pensei em adicionar a opï¿½ï¿½o "excluir pedido"
+        // obs dev: se der tempo, talvez colocar a opï¿½ï¿½o de "editar pedido"
+        // Motivo: trabalhar com exclusï¿½o e ediï¿½ï¿½o de itens no arquivo
     } while (opcoes_inicio != 0);
 
     return 0;
 }
 
-// Função para encerrar o programa
+// Funï¿½ï¿½o para encerrar o programa
 void sair()
 {
-    printf(" Você encerrou o programa!\n Agradecemos pela preferência :)\n");
+    printf(" Vocï¿½ encerrou o programa!\n Agradecemos pela preferï¿½ncia :)\n");
     exit(0);
 }
 
-// Função que diz que a opção escolhida é inválida
+// Funï¿½ï¿½o que diz que a opï¿½ï¿½o escolhida ï¿½ invï¿½lida
 void opcaoInvalida()
 {
-    printf(" Opção inválida!\n\n");
+    printf(" Opï¿½ï¿½o invï¿½lida!\n\n");
 }
 
-// Função para o cliente fazer um pedido
+// Funï¿½ï¿½o para o cliente fazer um pedido
 void fazerPedido()
 {
     int opcoes_pedidos = 1;
@@ -92,7 +99,7 @@ void fazerPedido()
             printf("\n==========================================\n");
             printf(" FAZER PEDIDO ");
             printf("\n==========================================\n");
-            printf(" 1 - Voltar\n 2 - Cardápio de comidas\n 3 - Cardápio de Bebidas\n 4 - Cardápio de Sobremesas\n 0 - Sair");
+            printf(" 1 - Voltar\n 2 - Cardï¿½pio de comidas\n 3 - Cardï¿½pio de Bebidas\n 4 - Cardï¿½pio de Sobremesas\n 0 - Sair");
             printf("\n==========================================\n");
         }
         printf("%s", msgEscolherOpcao);
@@ -123,31 +130,66 @@ void fazerPedido()
     } while (opcoes_pedidos != 0);
 }
 
-// Funções criadas para imprimir os dados dos cardápios
-// obs dev: talvez tenha uma forma de fazer isso usando apenas uma função, e passando o arquivo por parâmetro
+// Funï¿½ï¿½es criadas para imprimir os dados dos cardï¿½pios
+// obs dev: talvez tenha uma forma de fazer isso usando apenas uma funï¿½ï¿½o, e passando o arquivo por parï¿½metro
 void cardapioComidas()
 {
-    printf(" Listar as opções do cardápio de comidas");
+    printf(" Listar as opÃ§Ãµes do cardÃ¡pio de comidas\n");
+    int i;
+    Comidas comida[10];
+
+    FILE *comidas = fopen("./comidas.txt", "r");
+
+    if (comidas == NULL)
+    {
+        printf("Erro ao abrir o arquivo comidas.txt");
+        return 1;
+    }
+    else
+    {
+        printf("\n===============================");
+        printf("\n       Cardapio: ");
+        printf("\n===============================\n");
+
+        i = 0;
+        while (fscanf(comida, "%d", &comida[i].id) != EOF)
+        {
+
+            fscanf(comida, "%d ", &comida[i].id);
+            fscanf(comida, "%c ", &comida[i].prato);
+            fscanf(comida, "%f ", &comida[i].preco);
+
+            // printf("ID: %d \n", id);
+            // printf("Prato: %c \n", prato);
+            // printf("PreÃ§o: %s %s \n", preco);
+            printf("%d %c %f\n", comida[i].id, comida[i].prato, comida[i].preco);
+            i++;
+        }
+        printf("\n===============================\n");
+    }
+    fclose(comidas);
+
+    return 0;
 }
 void cardapioBebidas()
 {
-    printf(" Listar as opções do cardápio de bebidas");
+    printf(" Listar as opï¿½ï¿½es do cardï¿½pio de bebidas");
 }
 void cardapioSobremesas()
 {
-    printf(" Listar as opções do cardápio de sobremesas");
+    printf(" Listar as opï¿½ï¿½es do cardï¿½pio de sobremesas");
 }
 
 void dadosDoPedido()
 {
-    // função para coletar ids do pedido e nome do cliente
+    // funï¿½ï¿½o para coletar ids do pedido e nome do cliente
     // utilizar a struct que criei, para coletar os dados do pedido
 }
 
-// Função para o cliente pedir a conta
+// Funï¿½ï¿½o para o cliente pedir a conta
 void fecharConta()
 {
-    // obs dev: nessa função, temos que consultar o arquivo de pedidos
+    // obs dev: nessa funï¿½ï¿½o, temos que consultar o arquivo de pedidos
     printf(" Listar todos os pedidos do cliente e exibir o valor total da conta\n\n");
     sair();
 }
