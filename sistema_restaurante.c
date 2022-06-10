@@ -135,11 +135,199 @@ void fazerPedido()
 // obs dev: talvez tenha uma forma de fazer isso usando apenas uma fun��o, e passando o arquivo por par�metro
 void cardapioComidas()
 {
-    printf(" Listar as op��es do card�pio de comidas");
+    int i, j, idProduto[10];
+    char nome_cliente[30];
+    dadosCardapio comida;
+
+    FILE *comidas = fopen("comidas.txt", "r");
+    if (comidas == NULL)
+    {
+        printf(" Erro ao tentar abrir o card�pio de comidas.\n Tente novamente mais tarde!\n");
+        main();
+    }
+    else
+    {
+        printf("\n==========================================\n");
+        printf(" Card�pio de Comidas");
+        printf("\n==========================================\n");
+        printf(" n� - Nome - Valor");
+        printf("\n==========================================\n");
+
+        i = 0;
+        while (fscanf(comidas, "%d;", &comida.id) != EOF)
+        {
+            fscanf(comidas, "%d;", &comida.id);
+            fscanf(comidas, "%[^\n]", &comida.prato);
+
+            printf(" %d - ", comida.id);
+
+            char *token = strtok(comida.prato, ";");
+            j = 0;
+            while (j < 2)
+            {
+                if (j == 0)
+                {
+                    printf("%s - ", comida.prato);
+                }
+                else
+                {
+                    comida.valor = atof(token);
+                    printf("%.2f\n", comida.valor);
+                }
+                token = strtok(NULL, ";");
+                j++;
+            }
+            i++;
+        }
+        printf("==========================================\n\n");
+    }
+    printf(" Agora precisamos de algumas informa��es para completar seu pedido: ");
+    printf("\n Nome-Sobrenome (no formato indicado, e sem acento): ");
+    fflush(stdin);
+    scanf("%s", &nome_cliente);
+
+    FILE *pedidosCliente = fopen(nome_cliente, "w");
+    if (pedidosCliente == NULL)
+    {
+        printf(" Erro ao tentar anotar o pedido:(\n Tente novamente mais tarde!\n");
+        main();
+    }
+    else
+    {
+        for (i = 0; i < 10; i++)
+        {
+            idProduto[i] = 0;
+        }
+        i = 0;
+        do
+        {
+            printf(" Informe o n�mero do produto (ou digite zero para finalizar): ");
+            scanf("%d", &idProduto[i]);
+            if (idProduto[i - 1] != 0)
+            {
+                // fprintf(feminino, "%d ", pessoa[i].id);
+                fprintf(pedidosCliente, "%d", i);
+                fprintf(pedidosCliente, "%[^\n]", nome_cliente);
+                fprintf(pedidosCliente, "%d", comida.id);
+                fprintf(pedidosCliente, "%.2f", comida.valor);
+            }
+            else
+            {
+                printf("\nPedido realizado com sucesso! ");
+            }
+
+            printf("\nNome do Cliente: %c \n Prato escolhido: %d \n Valor do Prato: %.2f\n", nome_cliente, comida.id, comida.valor);
+            //deu errado ainda
+            // printar:
+            // id_pedido
+            // nome_cliente
+            // id_prato
+            // valor_prato
+
+            i++;
+        } while (idProduto[i - 1] != 0 && i < 10);
+    }
+
+    fclose(comidas);
+    fclose(pedidosCliente);
 }
 void cardapioBebidas()
 {
-    printf(" Listar as op��es do card�pio de bebidas");
+    int i, j, idProduto[10];
+    char nome_cliente[30];
+    dadosCardapio bebida;
+
+    FILE *bebidas = fopen("bebidas.txt", "r");
+    if (bebidas == NULL)
+    {
+        printf(" Erro ao tentar abrir o card�pio de comidas.\n Tente novamente mais tarde!\n");
+        main();
+    }
+    else
+    {
+        printf("\n==========================================\n");
+        printf(" Card�pio de Bebidas");
+        printf("\n==========================================\n");
+        printf(" n� - Nome - Valor");
+        printf("\n==========================================\n");
+
+        i = 0;
+        while (fscanf(bebidas, "%d;", &bebida.id) != EOF)
+        {
+            fscanf(bebidas, "%d;", &bebida.id);
+            fscanf(bebidas, "%[^\n]", &bebida.prato);
+
+            printf(" %d - ", bebida.id);
+
+            char *token = strtok(bebida.prato, ";");
+            j = 0;
+            while (j < 2)
+            {
+                if (j == 0)
+                {
+                    printf("%s - ", bebida.prato);
+                }
+                else
+                {
+                    bebida.valor = atof(token);
+                    printf("%.2f\n", bebida.valor);
+                }
+                token = strtok(NULL, ";");
+                j++;
+            }
+            i++;
+        }
+        printf("==========================================\n\n");
+    }
+    printf(" Agora precisamos de algumas informa��es para completar seu pedido: ");
+    printf("\n Nome-Sobrenome (no formato indicado, e sem acento): ");
+    fflush(stdin);
+    scanf("%s", &nome_cliente);
+
+    FILE *pedidosCliente = fopen(nome_cliente, "w");
+    if (pedidosCliente == NULL)
+    {
+        printf(" Erro ao tentar anotar o pedido:(\n Tente novamente mais tarde!\n");
+        main();
+    }
+    else
+    {
+        for (i = 0; i < 10; i++)
+        {
+            idProduto[i] = 0;
+        }
+        i = 0;
+        do
+        {
+            printf(" Informe o n�mero do produto (ou digite zero para finalizar): ");
+            scanf("%d", &idProduto[i]);
+            if (idProduto[i - 1] != 0)
+            {
+                // fprintf(feminino, "%d ", pessoa[i].id);
+                fprintf(pedidosCliente, "%d", i);
+                fprintf(pedidosCliente, "%[^\n]", nome_cliente);
+                fprintf(pedidosCliente, "%d", bebida.id);
+                fprintf(pedidosCliente, "%.2f", bebida.valor);
+            }
+            else
+            {
+                printf("\nPedido realizado com sucesso! ");
+            }
+
+            printf("\nNome do Cliente: %c \n Prato escolhido: %d \n Valor do Prato: %.2f\n", nome_cliente, bebida.id, bebida.valor);
+            //deu errado ainda
+            // printar:
+            // id_pedido
+            // nome_cliente
+            // id_prato
+            // valor_prato
+
+            i++;
+        } while (idProduto[i - 1] != 0 && i < 10);
+    }
+
+    fclose(bebidas);
+    fclose(pedidosCliente);
 }
 void cardapioSobremesas()
 {
