@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <locale.h>
 
 // Declaração das constantes
@@ -22,6 +23,13 @@ typedef struct
     int id[quantidade];
     char nome[tamanhoNome];
 } dadosPedido;
+
+typedef struct
+{
+    int id;
+    char prato[30];
+    float valor;
+} dadosCardapio;
 
 int main()
 {
@@ -87,7 +95,7 @@ void fazerPedido()
 
     do
     {
-        if (opcoes_pedidos >= 0 && opcoes_pedidos <= 2)
+        if (opcoes_pedidos >= 0 && opcoes_pedidos <= 4)
         {
             printf("\n==========================================\n");
             printf(" FAZER PEDIDO ");
@@ -135,7 +143,107 @@ void cardapioBebidas()
 }
 void cardapioSobremesas()
 {
-    printf(" Listar as opções do cardápio de sobremesas");
+    int i, j, idProduto[10];
+    char nome_cliente[30];
+    dadosCardapio sobremesa;
+
+    FILE *sobremesas = fopen("sobremesas.txt", "r");
+    if (sobremesas == NULL)
+    {
+        printf(" Erro ao tentar abrir o cardápio de sobremesas.\n Tente novamente mais tarde!\n");
+        main();
+    }
+    else
+    {
+        printf("\n==========================================\n");
+        printf(" Cardápio de sobremesas");
+        printf("\n==========================================\n");
+        printf(" nº - Nome - Valor");
+        printf("\n==========================================\n");
+
+        i = 0;
+        while (fscanf(sobremesas, "%d;", &sobremesa.id) != EOF)
+        {
+            fscanf(sobremesas, "%d;", &sobremesa.id);
+            // Lê tudo o que tem na linha, após o primeiro ";"
+            fscanf(sobremesas, "%[^\n]", &sobremesa.prato);
+
+            printf(" %d - ", sobremesa.id);
+
+            // strtok(), neste caso, é usado para separar os itens que estão entre os ";"
+            char *token = strtok(sobremesa.prato, ";");
+            j = 0;
+            while (j < 2)
+            {
+                if (j == 0)
+                {
+                    // Ao entrar no laço pela primeira vez, imprimo o nome do prato
+                    printf("%s - ", sobremesa.prato);
+                }
+                else
+                {
+                    // Ao entrar no laço pela segunda vez, transformo a string em float, através da função atof(), e imprimo esse float
+                    sobremesa.valor = atof(token);
+                    printf("%.2f\n", sobremesa.valor);
+                }
+                // o que já foi lido e printado, é anulado, para prosseguir com as leituras
+                token = strtok(NULL, ";");
+                j++;
+            }
+            i++;
+        }
+        printf("==========================================\n\n");
+    }
+
+    printf(" Agora precisamos de algumas informações para completar seu pedido: ");
+    printf("\n Nome-Sobrenome (no formato indicado, e sem acento): ");
+    fflush(stdin);
+    scanf("%s", &nome_cliente);
+
+    FILE *pedidosCliente = fopen(nome_cliente, "w");
+    if (pedidosCliente == NULL)
+    {
+        printf(" Erro ao tentar anotar o pedido:(\n Tente novamente mais tarde!\n");
+        main();
+    }
+    else
+    {
+        // zerando o vetor, para evitar buffer
+        for (i = 0; i < 10; i++)
+        {
+            idProduto[i] = 0;
+        }
+
+        i = 0;
+        do
+        {
+            printf(" Informe o número do produto (ou digite zero para finalizar): ");
+            scanf("%d", &idProduto[i]);
+            if (idProduto[i - 1] != 0)
+            {
+                // fprintf(feminino, "%d ", pessoa[i].id);
+                fprintf(pedidosCliente, "%d", i);
+                fprintf(pedidosCliente, "%[^\n]", nome_cliente);
+                fprintf(pedidosCliente, "%d", sobremesa.id);
+                fprintf(pedidosCliente, "%.2f", sobremesa.valor);
+            }
+            else
+            {
+                printf("\nPedido realizado com sucesso! ");
+            }
+
+            // printar:
+            // id_pedido
+            // nome_cliente
+            // id_prato
+            // valor_prato
+
+            i++;
+        } while (idProduto[i - 1] != 0 && i < 10);
+    }
+
+    fclose(sobremesas);
+    fclose(pedidosCliente);
 }
 
 void dadosDoPedido()
