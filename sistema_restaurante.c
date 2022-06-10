@@ -136,7 +136,7 @@ void cardapioComidas()
 {
     int i, j, idProduto[10];
     char nome_cliente[30];
-    dadosCardapio comida;
+    //dadosCardapio comida;
 
     FILE *comidas = fopen("./comidas.txt", "r");
 
