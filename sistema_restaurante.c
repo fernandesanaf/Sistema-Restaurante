@@ -134,9 +134,9 @@ void fazerPedido()
 // obs dev: talvez tenha uma forma de fazer isso usando apenas uma fun��o, e passando o arquivo por par�metro
 void cardapioComidas()
 {
-    printf(" Listar as opções do cardápio de comidas\n");
-    int i;
-    Comidas comida[10];
+    int i, j, idProduto[10];
+    char nome_cliente[30];
+    dadosCardapio comida;
 
     FILE *comidas = fopen("./comidas.txt", "r");
 
@@ -155,14 +155,32 @@ void cardapioComidas()
         while (fscanf(comida, "%d", &comida[i].id) != EOF)
         {
 
-            fscanf(comida, "%d ", &comida[i].id);
-            fscanf(comida, "%c ", &comida[i].prato);
-            fscanf(comida, "%f ", &comida[i].preco);
+            fscanf(comidas, "%d;", &comida.id);
+            // Lê tudo o que tem na linha, após o primeiro ";"
+            fscanf(comida, "%[^\n]", &comida.prato);
 
-            // printf("ID: %d \n", id);
-            // printf("Prato: %c \n", prato);
-            // printf("Preço: %s %s \n", preco);
-            printf("%d %c %f\n", comida[i].id, comida[i].prato, comida[i].preco);
+            printf(" %d - ", comida.id);
+
+            // strtok(), neste caso, é usado para separar os itens que estão entre os ";"
+            char *token = strtok(comida.prato, ";");
+            j = 0;
+
+            while(j<2){
+                if (j == 0)
+                {
+                    // Ao entrar no laço pela primeira vez, imprimo o nome do prato
+                    printf("%s - ", comida.prato);
+                }
+                else
+                {
+                    // Ao entrar no laço pela segunda vez, transformo a string em float, através da função atof(), e imprimo esse float
+                    comida.valor = atof(token);
+                    printf("%.2f\n", comida.valor);
+                }
+                // o que já foi lido e printado, é anulado, para prosseguir com as leituras
+                token = strtok(NULL, ";");
+                j++;
+            }
             i++;
         }
         printf("\n===============================\n");
