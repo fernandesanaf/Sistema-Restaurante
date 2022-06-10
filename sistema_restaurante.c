@@ -3,12 +3,12 @@
 #include <string.h>
 #include <locale.h>
 
-// Declaração das constantes
-#define msgEscolherOpcao " Escolha uma das opções para continuar: "
+// Declaraï¿½ï¿½o das constantes
+#define msgEscolherOpcao " Escolha uma das opï¿½ï¿½es para continuar: "
 #define quantidade 15
 #define tamanhoNome 30
 
-// Protótipos das funções/procedimentos
+// Protï¿½tipos das funï¿½ï¿½es/procedimentos
 void sair();
 void opcaoInvalida();
 void fazerPedido();
@@ -17,7 +17,7 @@ void cardapioComidas();
 void cardapioBebidas();
 void cardapioSobremesas();
 
-// Declaração de structs
+// Declaraï¿½ï¿½o de structs
 typedef struct
 {
     int id[quantidade];
@@ -42,7 +42,7 @@ int main()
         if (opcoes_inicio >= 0 && opcoes_inicio <= 2)
         {
             printf("\n===========================================\n");
-            printf(" Olá! Seja bem vindo ao nosso sistema!\n O que deseja fazer?");
+            printf(" Olï¿½! Seja bem vindo ao nosso sistema!\n O que deseja fazer?");
             printf("\n===========================================\n");
             printf(" 1 - Fazer pedido\n 2 - Fechar a conta\n 0 - Sair");
             printf("\n===========================================\n");
@@ -67,28 +67,28 @@ int main()
             break;
         }
 
-        // obs dev: pensei em adicionar a opção "excluir pedido"
-        // obs dev: se der tempo, talvez colocar a opção de "editar pedido"
-        // Motivo: trabalhar com exclusão e edição de itens no arquivo
+        // obs dev: pensei em adicionar a opï¿½ï¿½o "excluir pedido"
+        // obs dev: se der tempo, talvez colocar a opï¿½ï¿½o de "editar pedido"
+        // Motivo: trabalhar com exclusï¿½o e ediï¿½ï¿½o de itens no arquivo
     } while (opcoes_inicio != 0);
 
     return 0;
 }
 
-// Função para encerrar o programa
+// Funï¿½ï¿½o para encerrar o programa
 void sair()
 {
-    printf(" Você encerrou o programa!\n Agradecemos pela preferência :)\n");
+    printf(" Vocï¿½ encerrou o programa!\n Agradecemos pela preferï¿½ncia :)\n");
     exit(0);
 }
 
-// Função que diz que a opção escolhida é inválida
+// Funï¿½ï¿½o que diz que a opï¿½ï¿½o escolhida ï¿½ invï¿½lida
 void opcaoInvalida()
 {
-    printf(" Opção inválida!\n\n");
+    printf(" Opï¿½ï¿½o invï¿½lida!\n\n");
 }
 
-// Função para o cliente fazer um pedido
+// Funï¿½ï¿½o para o cliente fazer um pedido
 void fazerPedido()
 {
     int opcoes_pedidos = 1;
@@ -100,7 +100,7 @@ void fazerPedido()
             printf("\n==========================================\n");
             printf(" FAZER PEDIDO ");
             printf("\n==========================================\n");
-            printf(" 1 - Voltar\n 2 - Cardápio de comidas\n 3 - Cardápio de Bebidas\n 4 - Cardápio de Sobremesas\n 0 - Sair");
+            printf(" 1 - Voltar\n 2 - Cardï¿½pio de comidas\n 3 - Cardï¿½pio de Bebidas\n 4 - Cardï¿½pio de Sobremesas\n 0 - Sair");
             printf("\n==========================================\n");
         }
         printf("%s", msgEscolherOpcao);
@@ -131,15 +131,15 @@ void fazerPedido()
     } while (opcoes_pedidos != 0);
 }
 
-// Funções criadas para imprimir os dados dos cardápios
-// obs dev: talvez tenha uma forma de fazer isso usando apenas uma função, e passando o arquivo por parâmetro
+// Funï¿½ï¿½es criadas para imprimir os dados dos cardï¿½pios
+// obs dev: talvez tenha uma forma de fazer isso usando apenas uma funï¿½ï¿½o, e passando o arquivo por parï¿½metro
 void cardapioComidas()
 {
-    printf(" Listar as opções do cardápio de comidas");
+    printf(" Listar as opï¿½ï¿½es do cardï¿½pio de comidas");
 }
 void cardapioBebidas()
 {
-    printf(" Listar as opções do cardápio de bebidas");
+    printf(" Listar as opï¿½ï¿½es do cardï¿½pio de bebidas");
 }
 void cardapioSobremesas()
 {
@@ -150,43 +150,43 @@ void cardapioSobremesas()
     FILE *sobremesas = fopen("sobremesas.txt", "r");
     if (sobremesas == NULL)
     {
-        printf(" Erro ao tentar abrir o cardápio de sobremesas.\n Tente novamente mais tarde!\n");
+        printf(" Erro ao tentar abrir o cardï¿½pio de sobremesas.\n Tente novamente mais tarde!\n");
         main();
     }
     else
     {
         printf("\n==========================================\n");
-        printf(" Cardápio de sobremesas");
+        printf(" Cardï¿½pio de sobremesas");
         printf("\n==========================================\n");
-        printf(" nº - Nome - Valor");
+        printf(" nï¿½ - Nome - Valor");
         printf("\n==========================================\n");
 
         i = 0;
         while (fscanf(sobremesas, "%d;", &sobremesa.id) != EOF)
         {
             fscanf(sobremesas, "%d;", &sobremesa.id);
-            // Lê tudo o que tem na linha, após o primeiro ";"
+            // Lï¿½ tudo o que tem na linha, apï¿½s o primeiro ";"
             fscanf(sobremesas, "%[^\n]", &sobremesa.prato);
 
             printf(" %d - ", sobremesa.id);
 
-            // strtok(), neste caso, é usado para separar os itens que estão entre os ";"
+            // strtok(), neste caso, ï¿½ usado para separar os itens que estï¿½o entre os ";"
             char *token = strtok(sobremesa.prato, ";");
             j = 0;
             while (j < 2)
             {
                 if (j == 0)
                 {
-                    // Ao entrar no laço pela primeira vez, imprimo o nome do prato
+                    // Ao entrar no laï¿½o pela primeira vez, imprimo o nome do prato
                     printf("%s - ", sobremesa.prato);
                 }
                 else
                 {
-                    // Ao entrar no laço pela segunda vez, transformo a string em float, através da função atof(), e imprimo esse float
+                    // Ao entrar no laï¿½o pela segunda vez, transformo a string em float, atravï¿½s da funï¿½ï¿½o atof(), e imprimo esse float
                     sobremesa.valor = atof(token);
                     printf("%.2f\n", sobremesa.valor);
                 }
-                // o que já foi lido e printado, é anulado, para prosseguir com as leituras
+                // o que jï¿½ foi lido e printado, ï¿½ anulado, para prosseguir com as leituras
                 token = strtok(NULL, ";");
                 j++;
             }
@@ -195,7 +195,7 @@ void cardapioSobremesas()
         printf("==========================================\n\n");
     }
 
-    printf(" Agora precisamos de algumas informações para completar seu pedido: ");
+    printf(" Agora precisamos de algumas informaï¿½ï¿½es para completar seu pedido: ");
     printf("\n Nome-Sobrenome (no formato indicado, e sem acento): ");
     fflush(stdin);
     scanf("%s", &nome_cliente);
@@ -217,7 +217,7 @@ void cardapioSobremesas()
         i = 0;
         do
         {
-            printf(" Informe o número do produto (ou digite zero para finalizar): ");
+            printf(" Informe o nï¿½mero do produto (ou digite zero para finalizar): ");
             scanf("%d", &idProduto[i]);
             if (idProduto[i - 1] != 0)
             {
@@ -248,14 +248,14 @@ void cardapioSobremesas()
 
 void dadosDoPedido()
 {
-    // função para coletar ids do pedido e nome do cliente
+    // funï¿½ï¿½o para coletar ids do pedido e nome do cliente
     // utilizar a struct que criei, para coletar os dados do pedido
 }
 
-// Função para o cliente pedir a conta
+// Funï¿½ï¿½o para o cliente pedir a conta
 void fecharConta()
 {
-    // obs dev: nessa função, temos que consultar o arquivo de pedidos
+    // obs dev: nessa funï¿½ï¿½o, temos que consultar o arquivo de pedidos
     printf(" Listar todos os pedidos do cliente e exibir o valor total da conta\n\n");
     sair();
 }
