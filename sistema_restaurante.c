@@ -3,21 +3,19 @@
 #include <string.h>
 #include <locale.h>
 
-// Declaraï¿½ï¿½o das constantes
-#define msgEscolherOpcao " Escolha uma das opï¿½ï¿½es para continuar: "
-#define quantidade 15
+// Declaração das constantes
+#define msgEscolherOpcao " Escolha uma das opções para continuar: "
+#define quantidade 30
 #define tamanhoNome 30
 
-// Protï¿½tipos das funï¿½ï¿½es/procedimentos
+// Protótipos das funções/procedimentos
 void sair();
 void opcaoInvalida();
 void fazerPedido();
-void fecharConta();
-void cardapioComidas();
-void cardapioBebidas();
-void cardapioSobremesas();
+void historicoPedidos();
+void verCardapio();
 
-// Declaraï¿½ï¿½o de structs
+// Declaração de structs
 typedef struct
 {
     int id[quantidade];
@@ -42,9 +40,9 @@ int main()
         if (opcoes_inicio >= 0 && opcoes_inicio <= 2)
         {
             printf("\n===========================================\n");
-            printf(" Olï¿½! Seja bem vindo ao nosso sistema!\n O que deseja fazer?");
+            printf(" Olá Seja bem vindo ao nosso sistema!\n O que deseja fazer?");
             printf("\n===========================================\n");
-            printf(" 1 - Fazer pedido\n 2 - Fechar a conta\n 0 - Sair");
+            printf(" 1 - Fazer pedido\n 2 - Ver histórico de compras\n 0 - Sair");
             printf("\n===========================================\n");
         }
         printf("%s", msgEscolherOpcao);
@@ -60,35 +58,31 @@ int main()
             fazerPedido();
             break;
         case 2:
-            fecharConta();
+            historicoPedidos();
             break;
         default:
             opcaoInvalida();
             break;
         }
-
-        // obs dev: pensei em adicionar a opï¿½ï¿½o "excluir pedido"
-        // obs dev: se der tempo, talvez colocar a opï¿½ï¿½o de "editar pedido"
-        // Motivo: trabalhar com exclusï¿½o e ediï¿½ï¿½o de itens no arquivo
     } while (opcoes_inicio != 0);
 
     return 0;
 }
 
-// Funï¿½ï¿½o para encerrar o programa
+// Função para encerrar o programa
 void sair()
 {
-    printf(" Vocï¿½ encerrou o programa!\n Agradecemos pela preferï¿½ncia :)\n");
+    printf(" Você encerrou o programa!\n Agradecemos pela preferência :)\n");
     exit(0);
 }
 
-// Funï¿½ï¿½o que diz que a opï¿½ï¿½o escolhida ï¿½ invï¿½lida
+// Função que diz que a opção escolhida é inválida
 void opcaoInvalida()
 {
-    printf(" Opï¿½ï¿½o invï¿½lida!\n\n");
+    printf(" Opção inválida!\n\n");
 }
 
-// Funï¿½ï¿½o para o cliente fazer um pedido
+// Função para o cliente fazer um pedido
 void fazerPedido()
 {
     int opcoes_pedidos = 1;
@@ -100,7 +94,7 @@ void fazerPedido()
             printf("\n==========================================\n");
             printf(" FAZER PEDIDO ");
             printf("\n==========================================\n");
-            printf(" 1 - Voltar\n 2 - Cardï¿½pio de comidas\n 3 - Cardï¿½pio de Bebidas\n 4 - Cardï¿½pio de Sobremesas\n 0 - Sair");
+            printf(" 1 - Ver cardápio\n 2 - Voltar\n 0 - Sair");
             printf("\n==========================================\n");
         }
         printf("%s", msgEscolherOpcao);
@@ -113,16 +107,10 @@ void fazerPedido()
             sair();
             break;
         case 1:
-            main();
+            verCardapio();
             break;
         case 2:
-            cardapioComidas();
-            break;
-        case 3:
-            cardapioBebidas();
-            break;
-        case 4:
-            cardapioSobremesas();
+            main();
             break;
         default:
             opcaoInvalida();
@@ -131,319 +119,145 @@ void fazerPedido()
     } while (opcoes_pedidos != 0);
 }
 
-// Funï¿½ï¿½es criadas para imprimir os dados dos cardï¿½pios
-// obs dev: talvez tenha uma forma de fazer isso usando apenas uma funï¿½ï¿½o, e passando o arquivo por parï¿½metro
-void cardapioComidas()
+// Funções criadas para imprimir os dados dos cardápios
+// obs dev: talvez tenha uma forma de fazer isso usando apenas uma função, e passando o arquivo por parâmetro
+
+void verCardapio()
 {
     int i, j, idProduto[10];
-    char nome_cliente[30];
-    dadosCardapio comida;
+    dadosCardapio cardapio;
 
-    FILE *comidas = fopen("comidas.txt", "r");
-    if (comidas == NULL)
+    FILE *itensCardapio = fopen("cardapio.txt", "r");
+    if (itensCardapio == NULL)
     {
-        printf(" Erro ao tentar abrir o cardï¿½pio de comidas.\n Tente novamente mais tarde!\n");
+        printf(" Erro ao tentar abrir o cardápio de sobremesas.\n Tente novamente mais tarde!\n");
         main();
     }
     else
     {
-        printf("\n==========================================\n");
-        printf(" Cardï¿½pio de Comidas");
-        printf("\n==========================================\n");
-        printf(" nï¿½ - Nome - Valor");
-        printf("\n==========================================\n");
-
-        i = 0;
-        while (fscanf(comidas, "%d;", &comida.id) != EOF)
+        i = 1;
+        while (fscanf(itensCardapio, "%d;", &cardapio.id) != EOF)
         {
-            fscanf(comidas, "%d;", &comida.id);
-            fscanf(comidas, "%[^\n]", &comida.prato);
+            if (i == 1)
+            {
+                printf("\n==========================================\n");
+                printf("           Cardápio de comidas");
+                printf("\n==========================================\n");
+                printf(" %-6s%-29s%-6s\n", "nº", "Nome", "Valor");
+            }
+            else if (i == 11)
+            {
+                printf("\n==========================================\n");
+                printf("           Cardápio de bebidas");
+                printf("\n==========================================\n");
+                printf(" %-6s%-29s%-6s\n", "nº", "Nome", "Valor");
+            }
+            else if (i == 21)
+            {
+                printf("\n==========================================\n");
+                printf("          Cardápio de sobremesas");
+                printf("\n==========================================\n");
+                printf(" %-6s%-29s%-6s\n", "nº", "Nome", "Valor");
+            }
 
-            printf(" %d - ", comida.id);
+            fscanf(itensCardapio, "%d;", &cardapio.id);
+            // Lê tudo o que tem na linha, após o primeiro ";"
+            fscanf(itensCardapio, "%[^\n]", &cardapio.prato);
 
-            char *token = strtok(comida.prato, ";");
+            printf(" %-6d", cardapio.id);
+
+            // strtok(), neste caso, é usado para separar os itens que estão entre os ";"
+            char *token = strtok(cardapio.prato, ";");
             j = 0;
             while (j < 2)
             {
                 if (j == 0)
                 {
-                    printf("%s - ", comida.prato);
+                    // Ao entrar no laço pela primeira vez, imprimo o nome do prato
+                    printf("%-29s", cardapio.prato);
                 }
                 else
                 {
-                    comida.valor = atof(token);
-                    printf("%.2f\n", comida.valor);
+                    // Ao entrar no laço pela segunda vez, transformo a string em float, através da função atof(), e imprimo esse float
+                    cardapio.valor = atof(token);
+                    printf("%.2f\n", cardapio.valor);
                 }
+                // o que já foi lido e printado, é anulado, para prosseguir com as leituras
                 token = strtok(NULL, ";");
                 j++;
             }
             i++;
         }
-        printf("==========================================\n\n");
-    }
-    printf(" Agora precisamos de algumas informaï¿½ï¿½es para completar seu pedido: ");
-    printf("\n Nome-Sobrenome (no formato indicado, e sem acento): ");
-    fflush(stdin);
-    scanf("%s", &nome_cliente);
-
-    FILE *pedidosCliente = fopen(nome_cliente, "w");
-    if (pedidosCliente == NULL)
-    {
-        printf(" Erro ao tentar anotar o pedido:(\n Tente novamente mais tarde!\n");
-        main();
-    }
-    else
-    {
-        for (i = 0; i < 10; i++)
-        {
-            idProduto[i] = 0;
-        }
-        i = 0;
-        do
-        {
-            printf(" Informe o nï¿½mero do produto (ou digite zero para finalizar): ");
-            scanf("%d", &idProduto[i]);
-            if (idProduto[i - 1] != 0)
-            {
-                // fprintf(feminino, "%d ", pessoa[i].id);
-                fprintf(pedidosCliente, "%d", i);
-                fprintf(pedidosCliente, "%[^\n]", nome_cliente);
-                fprintf(pedidosCliente, "%d", comida.id);
-                fprintf(pedidosCliente, "%.2f", comida.valor);
-            }
-            else
-            {
-                printf("\nPedido realizado com sucesso! ");
-            }
-
-            printf("\nNome do Cliente: %c \n Prato escolhido: %d \n Valor do Prato: %.2f\n", nome_cliente, comida.id, comida.valor);
-            //deu errado ainda
-            // printar:
-            // id_pedido
-            // nome_cliente
-            // id_prato
-            // valor_prato
-
-            i++;
-        } while (idProduto[i - 1] != 0 && i < 10);
+        printf("\n\n");
     }
 
-    fclose(comidas);
-    fclose(pedidosCliente);
+    dadosDoPedido();
+
+    fclose(itensCardapio);
 }
-void cardapioBebidas()
-{
-    int i, j, idProduto[10];
-    char nome_cliente[30];
-    dadosCardapio bebida;
-
-    FILE *bebidas = fopen("bebidas.txt", "r");
-    if (bebidas == NULL)
-    {
-        printf(" Erro ao tentar abrir o cardï¿½pio de comidas.\n Tente novamente mais tarde!\n");
-        main();
-    }
-    else
-    {
-        printf("\n==========================================\n");
-        printf(" Cardï¿½pio de Bebidas");
-        printf("\n==========================================\n");
-        printf(" nï¿½ - Nome - Valor");
-        printf("\n==========================================\n");
-
-        i = 0;
-        while (fscanf(bebidas, "%d;", &bebida.id) != EOF)
-        {
-            fscanf(bebidas, "%d;", &bebida.id);
-            fscanf(bebidas, "%[^\n]", &bebida.prato);
-
-            printf(" %d - ", bebida.id);
-
-            char *token = strtok(bebida.prato, ";");
-            j = 0;
-            while (j < 2)
-            {
-                if (j == 0)
-                {
-                    printf("%s - ", bebida.prato);
-                }
-                else
-                {
-                    bebida.valor = atof(token);
-                    printf("%.2f\n", bebida.valor);
-                }
-                token = strtok(NULL, ";");
-                j++;
-            }
-            i++;
-        }
-        printf("==========================================\n\n");
-    }
-    printf(" Agora precisamos de algumas informaï¿½ï¿½es para completar seu pedido: ");
-    printf("\n Nome-Sobrenome (no formato indicado, e sem acento): ");
-    fflush(stdin);
-    scanf("%s", &nome_cliente);
-
-    FILE *pedidosCliente = fopen(nome_cliente, "w");
-    if (pedidosCliente == NULL)
-    {
-        printf(" Erro ao tentar anotar o pedido:(\n Tente novamente mais tarde!\n");
-        main();
-    }
-    else
-    {
-        for (i = 0; i < 10; i++)
-        {
-            idProduto[i] = 0;
-        }
-        i = 0;
-        do
-        {
-            printf(" Informe o nï¿½mero do produto (ou digite zero para finalizar): ");
-            scanf("%d", &idProduto[i]);
-            if (idProduto[i - 1] != 0)
-            {
-                // fprintf(feminino, "%d ", pessoa[i].id);
-                fprintf(pedidosCliente, "%d", i);
-                fprintf(pedidosCliente, "%[^\n]", nome_cliente);
-                fprintf(pedidosCliente, "%d", bebida.id);
-                fprintf(pedidosCliente, "%.2f", bebida.valor);
-            }
-            else
-            {
-                printf("\nPedido realizado com sucesso! ");
-            }
-
-            printf("\nNome do Cliente: %c \n Prato escolhido: %d \n Valor do Prato: %.2f\n", nome_cliente, bebida.id, bebida.valor);
-            //deu errado ainda
-            // printar:
-            // id_pedido
-            // nome_cliente
-            // id_prato
-            // valor_prato
-
-            i++;
-        } while (idProduto[i - 1] != 0 && i < 10);
-    }
-
-    fclose(bebidas);
-    fclose(pedidosCliente);
-}
-void cardapioSobremesas()
-{
-    int i, j, idProduto[10];
-    char nome_cliente[30];
-    dadosCardapio sobremesa;
-
-    FILE *sobremesas = fopen("sobremesas.txt", "r");
-    if (sobremesas == NULL)
-    {
-        printf(" Erro ao tentar abrir o cardï¿½pio de sobremesas.\n Tente novamente mais tarde!\n");
-        main();
-    }
-    else
-    {
-        printf("\n==========================================\n");
-        printf(" Cardï¿½pio de sobremesas");
-        printf("\n==========================================\n");
-        printf(" nï¿½ - Nome - Valor");
-        printf("\n==========================================\n");
-
-        i = 0;
-        while (fscanf(sobremesas, "%d;", &sobremesa.id) != EOF)
-        {
-            fscanf(sobremesas, "%d;", &sobremesa.id);
-            // Lï¿½ tudo o que tem na linha, apï¿½s o primeiro ";"
-            fscanf(sobremesas, "%[^\n]", &sobremesa.prato);
-
-            printf(" %d - ", sobremesa.id);
-
-            // strtok(), neste caso, ï¿½ usado para separar os itens que estï¿½o entre os ";"
-            char *token = strtok(sobremesa.prato, ";");
-            j = 0;
-            while (j < 2)
-            {
-                if (j == 0)
-                {
-                    // Ao entrar no laï¿½o pela primeira vez, imprimo o nome do prato
-                    printf("%s - ", sobremesa.prato);
-                }
-                else
-                {
-                    // Ao entrar no laï¿½o pela segunda vez, transformo a string em float, atravï¿½s da funï¿½ï¿½o atof(), e imprimo esse float
-                    sobremesa.valor = atof(token);
-                    printf("%.2f\n", sobremesa.valor);
-                }
-                // o que jï¿½ foi lido e printado, ï¿½ anulado, para prosseguir com as leituras
-                token = strtok(NULL, ";");
-                j++;
-            }
-            i++;
-        }
-        printf("==========================================\n\n");
-    }
-
-    printf(" Agora precisamos de algumas informaï¿½ï¿½es para completar seu pedido: ");
-    printf("\n Nome-Sobrenome (no formato indicado, e sem acento): ");
-    fflush(stdin);
-    scanf("%s", &nome_cliente);
-
-    FILE *pedidosCliente = fopen(nome_cliente, "w");
-    if (pedidosCliente == NULL)
-    {
-        printf(" Erro ao tentar anotar o pedido:(\n Tente novamente mais tarde!\n");
-        main();
-    }
-    else
-    {
-        // zerando o vetor, para evitar buffer
-        for (i = 0; i < 10; i++)
-        {
-            idProduto[i] = 0;
-        }
-
-        i = 0;
-        do
-        {
-            printf(" Informe o nï¿½mero do produto (ou digite zero para finalizar): ");
-            scanf("%d", &idProduto[i]);
-            if (idProduto[i - 1] != 0)
-            {
-                // fprintf(feminino, "%d ", pessoa[i].id);
-                fprintf(pedidosCliente, "%d", i);
-                fprintf(pedidosCliente, "%[^\n]", nome_cliente);
-                fprintf(pedidosCliente, "%d", sobremesa.id);
-                fprintf(pedidosCliente, "%.2f", sobremesa.valor);
-            }
-            else
-            {
-                printf("\nPedido realizado com sucesso! ");
-            }
-
-            // printar:
-            // id_pedido
-            // nome_cliente
-            // id_prato
-            // valor_prato
-
-            i++;
-        } while (idProduto[i - 1] != 0 && i < 10);
-    }
-
-    fclose(sobremesas);
-    fclose(pedidosCliente);
-}
-
 void dadosDoPedido()
 {
-    // funï¿½ï¿½o para coletar ids do pedido e nome do cliente
-    // utilizar a struct que criei, para coletar os dados do pedido
-}
+    int i;
+    dadosCardapio cardapio;
+    dadosPedido pedido;
 
-// Funï¿½ï¿½o para o cliente pedir a conta
-void fecharConta()
+    // função para coletar ids do pedido e nome do cliente
+    // utilizar a struct que criei, para coletar os dados do pedido
+    FILE *itensCardapio = fopen("cardapio.txt", "r");
+    FILE *pedidosCliente = fopen("historicoPedidos.txt", "w");
+    if (pedidosCliente == NULL)
+    {
+        printf(" Erro ao tentar anotar o pedido:(\n Tente novamente mais tarde!\n");
+        main();
+    }
+    else
+    {
+        printf(" Agora precisamos de algumas informações para completar seu pedido: ");
+        printf("\n Nome completo: ");
+        fflush(stdin);
+        scanf("%s", &pedido.nome);
+
+        // zerando o vetor, para evitar buffer
+        for (i = 0; i < quantidade; i++)
+        {
+            pedido.id[i] = 0;
+        }
+
+        i = 0;
+        do
+        {
+            printf(" Informe o número do produto (ou digite zero para finalizar): ");
+            scanf("%d", &pedido.id[i]);
+            if (pedido.id[i - 1] != 0)
+            {
+                // Ler linha
+                // fprintf(pedidosCliente, "%d", i);
+                // fprintf(pedidosCliente, "%[^\n]", nome_cliente);
+                // fprintf(pedidosCliente, "%d", cardapio.id);
+                // fprintf(pedidosCliente, "%.2f", cardapio.valor);
+            }
+            else
+            {
+                printf("\nPedido realizado com sucesso! ");
+            }
+
+            // printar:
+            // id_pedido
+            // nome_cliente
+            // id_prato
+            // valor_prato
+
+            i++;
+        } while (pedido.id[i - 1] != 0 && i < 10);
+    }
+
+    fclose(pedidosCliente);
+    fclose(itensCardapio);
+}
+// Função para o cliente pedir a conta
+void historicoPedidos()
 {
-    // obs dev: nessa funï¿½ï¿½o, temos que consultar o arquivo de pedidos
-    printf(" Listar todos os pedidos do cliente e exibir o valor total da conta\n\n");
+    // obs dev: nessa função, temos que consultar o arquivo de pedidos
+    printf(" Listar todos os pedidos do restaurante.\n\n");
     sair();
 }
