@@ -52,12 +52,15 @@ int main()
         switch (opcoes_inicio)
         {
         case 0:
+            system("cls");
             sair();
             break;
         case 1:
+            system("cls");
             fazerPedido();
             break;
         case 2:
+            system("cls");
             historicoPedidos();
             break;
         default:
@@ -72,7 +75,7 @@ int main()
 // Função para encerrar o programa
 void sair()
 {
-    printf(" Você encerrou o programa!\n Agradecemos pela preferência :)\n");
+    printf("\n Você encerrou o programa!\n Agradecemos pela preferência :)\n");
     exit(0);
 }
 
@@ -100,6 +103,7 @@ void fazerPedido()
         printf("%s", msgEscolherOpcao);
         scanf("%d", &opcoes_pedidos);
         printf("\n");
+        system("cls");
 
         switch (opcoes_pedidos)
         {
@@ -119,9 +123,7 @@ void fazerPedido()
     } while (opcoes_pedidos != 0);
 }
 
-// Funções criadas para imprimir os dados dos cardápios
-// obs dev: talvez tenha uma forma de fazer isso usando apenas uma função, e passando o arquivo por parâmetro
-
+// Funções criadas para imprimir os dados dos cardápios:
 void verCardapio()
 {
     int i, j, idProduto[10];
@@ -197,7 +199,7 @@ void verCardapio()
 }
 void dadosDoPedido()
 {
-    int i;
+    int i, idItem;
     dadosCardapio cardapio;
     dadosPedido pedido;
 
@@ -215,7 +217,7 @@ void dadosDoPedido()
         printf(" Agora precisamos de algumas informações para completar seu pedido: ");
         printf("\n Nome completo: ");
         fflush(stdin);
-        scanf("%s", &pedido.nome);
+        scanf("%[^\n]", &pedido.nome);
 
         // zerando o vetor, para evitar buffer
         for (i = 0; i < quantidade; i++)
@@ -224,21 +226,19 @@ void dadosDoPedido()
         }
 
         i = 0;
+        printf(" Informe o número do produto que deseja, digite 0 (zero) para finalizar: \n Obs.: Se quiser duas ou mais vezes o mesmo produto, digite o código mais de uma vez!\n");
         do
         {
-            printf(" Informe o número do produto (ou digite zero para finalizar): ");
+            printf(" %dº produto: ", i + 1);
             scanf("%d", &pedido.id[i]);
             if (pedido.id[i - 1] != 0)
             {
-                // Ler linha
+                fscanf(itensCardapio, "%d;", &cardapio.id) == pedido.id[i];
+
                 // fprintf(pedidosCliente, "%d", i);
                 // fprintf(pedidosCliente, "%[^\n]", nome_cliente);
                 // fprintf(pedidosCliente, "%d", cardapio.id);
                 // fprintf(pedidosCliente, "%.2f", cardapio.valor);
-            }
-            else
-            {
-                printf("\nPedido realizado com sucesso! ");
             }
 
             // printar:
@@ -248,7 +248,7 @@ void dadosDoPedido()
             // valor_prato
 
             i++;
-        } while (pedido.id[i - 1] != 0 && i < 10);
+        } while (pedido.id[i - 1] != 0 && i < 30);
     }
 
     fclose(pedidosCliente);
