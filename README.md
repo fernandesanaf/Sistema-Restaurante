@@ -1,3 +1,3 @@
 # Sistema-Restaurante
 
-Desenvolvido por Ana Fernandes, JoÃ£o Ketelhut e Leticia Araujo
+Projeto desenvolvido por Ana Fernandes e Leticia Araujo, para a disciplina de Programação de Computadores, ministrada pelo professor Edson Castro.

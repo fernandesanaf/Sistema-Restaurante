@@ -14,12 +14,13 @@ void opcaoInvalida();
 void fazerPedido();
 void historicoPedidos();
 void verCardapio();
+void dadosDoPedido();
 
 // Declaração de structs
 typedef struct
 {
     int id[quantidade];
-    char nome[tamanhoNome];
+    char nomeCliente[tamanhoNome];
     // valor total do pedido para mostrar no fim
     float valorTotal;
 } dadosPedido;
@@ -125,11 +126,10 @@ void fazerPedido()
 }
 
 // Funções criadas para imprimir os dados dos cardápios
-
 void verCardapio()
 {
     system("cls");
-    int i, j, k, idProduto[10];
+    int i, j;
     dadosCardapio cardapio;
 
     FILE *itensCardapio = fopen("cardapio.txt", "r");
@@ -199,47 +199,66 @@ void verCardapio()
 
     dadosDoPedido();
 }
+
 void dadosDoPedido()
 {
-    int i, k;
+    int i, j;
     dadosCardapio cardapio;
     dadosPedido pedido;
 
-    // Função para coletar ids do pedido e nome do cliente
-    // utilizar a struct que criei, para coletar os dados do pedido
-    // FILE *itensCardapio = fopen("cardapio.txt", "r");
-    FILE *pedidosCliente = fopen("pedidos.txt", "w+");
-    if (pedidosCliente == NULL)
+    printf(" Agora precisamos de algumas informações para completar seu pedido: ");
+    printf("\n Nome completo: ");
+    fflush(stdin);
+    scanf("%s", &pedido.nomeCliente);
+
+    // // zerando o vetor de caracteres, para evitar buffer
+    // for (j = 0; j < quantidade; j++)
+    // {
+    //     pedido.nomeCliente[j] = 0;
+    // }
+
+    FILE *itensCardapio = fopen("cardapio.txt", "r");
+    FILE *pedidosCliente = fopen("pedidos.txt", "a");
+    if (itensCardapio == NULL || pedidosCliente == NULL)
     {
-        printf(" Erro ao tentar anotar o pedido:(\n Tente novamente mais tarde!\n");
+        printf(" Erro ao tentar anotar o pedido.\n Tente novamente mais tarde!\n");
         main();
     }
     else
     {
-        printf(" Agora precisamos de algumas informações para completar seu pedido: ");
-        printf("\n Nome completo: ");
-        fflush(stdin);
-        scanf("%s", &pedido.nome);
-
-        // zerando o vetor, para evitar buffer
-        for (k = 0; k < quantidade; k++)
-        {
-            pedido.nome[k] = 0;
-        }
-
-        for (i = 0; i < quantidade; i++)
-        {
-            pedido.id[i] = 0;
-        }
-
         i = 0;
-        printf(" Informe o número do produto que deseja, ou digite zero para finalizar: \n");
+        printf(" Informe o número do produto que deseja, ou digite 0 (zero) para finalizar: \n");
         do
         {
             printf(" %dº produto: ", i + 1);
             scanf("%d", &pedido.id[i]);
-            if (pedido.id[i - 1] != 0)
+            if (pedido.id[i] != 0)
             {
+                j = 0;
+                while (fscanf(itensCardapio, "%d;", &cardapio.id) != EOF)
+                {
+                    j++;
+                    if (j == pedido.id[i])
+                    {
+                        printf("\nACHEI\n");
+
+                        printf("%d\t", i);
+                        printf("%[^\n]\t", pedido.nomeCliente);
+                        printf("%d\t", cardapio.id);
+                        printf("%.2f\n", cardapio.valor);
+
+                        // fprintf(pedidosCliente, "%d", i);
+                        // fprintf(pedidosCliente, "%[^\n]", pedido.nomeCliente);
+                        // fprintf(pedidosCliente, "%d", cardapio.id);
+                        // fprintf(pedidosCliente, "%.2f\n", cardapio.valor);
+                        break;
+                    }
+                    else
+                    {
+                        printf("\nNão achei\n");
+                    }
+                }
+
                 // Ler linha
                 // fprintf(pedidosCliente, "%d", i);
                 // fprintf(pedidosCliente, "%[^\n]", nome_cliente);
@@ -248,7 +267,7 @@ void dadosDoPedido()
             }
             else
             {
-                printf("\nPedido realizado com sucesso! ");
+                printf("\n Pedido realizado com sucesso!\n Dados do pedido:\n");
             }
 
             // printar:
@@ -258,11 +277,11 @@ void dadosDoPedido()
             // valor_prato
 
             i++;
-        } while (pedido.id[i - 1] != 0 && i < 10);
+        } while (pedido.id[i - 1] != 0);
     }
 
     fclose(pedidosCliente);
-    // fclose(itensCardapio);
+    fclose(itensCardapio);
 }
 // Função para o cliente pedir a conta
 void historicoPedidos()
