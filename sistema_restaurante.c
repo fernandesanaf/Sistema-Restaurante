@@ -12,17 +12,16 @@
 void sair();
 void opcaoInvalida();
 void fazerPedido();
-void historicoPedidos();
 void verCardapio();
 void dadosDoPedido();
+void historicoPedidos();
 
 // Declaração de structs
 typedef struct
 {
     int id[quantidade];
     char nomeCliente[tamanhoNome];
-    // valor total do pedido para mostrar no fim
-    float valorTotal;
+    int quant[quantidade];
 } dadosPedido;
 
 typedef struct
@@ -187,7 +186,7 @@ void verCardapio()
                     cardapio.valor = atof(token);
                     printf("%.2f\n", cardapio.valor);
                 }
-                // o que jé foi lido e printado, é anulado, para prosseguir com as leituras
+                // o que já foi lido e printado, é anulado, para prosseguir com as leituras
                 token = strtok(NULL, ";");
                 j++;
             }
@@ -202,86 +201,90 @@ void verCardapio()
 
 void dadosDoPedido()
 {
-    int i, j;
+    int i, j, k, cont;
+    float valorTotal = 0;
     dadosCardapio cardapio;
     dadosPedido pedido;
 
     printf(" Agora precisamos de algumas informações para completar seu pedido: ");
     printf("\n Nome completo: ");
     fflush(stdin);
-    scanf("%s", &pedido.nomeCliente);
+    scanf("%[^\n]", &pedido.nomeCliente);
 
-    // // zerando o vetor de caracteres, para evitar buffer
-    // for (j = 0; j < quantidade; j++)
-    // {
-    //     pedido.nomeCliente[j] = 0;
-    // }
-
-    FILE *itensCardapio = fopen("cardapio.txt", "r");
     FILE *pedidosCliente = fopen("pedidos.txt", "a");
-    if (itensCardapio == NULL || pedidosCliente == NULL)
+
+    i = 0;
+    cont = 0;
+    printf("\n Informe o número do produto e a quantidade que deseja pedir. \n Digite 0 (zero) para finalizar: \n");
+    do
     {
-        printf(" Erro ao tentar anotar o pedido.\n Tente novamente mais tarde!\n");
-        main();
-    }
-    else
-    {
-        i = 0;
-        printf(" Informe o número do produto que deseja, ou digite 0 (zero) para finalizar: \n");
-        do
+        printf("\n %dº produto: ", i + 1);
+        scanf("%d", &pedido.id[i]);
+        if (pedido.id[i] != 0)
         {
-            printf(" %dº produto: ", i + 1);
-            scanf("%d", &pedido.id[i]);
-            if (pedido.id[i] != 0)
+            printf(" Quantidade: ", i + 1);
+            scanf("%d", &pedido.quant[i]);
+        }
+        else
+        {
+            printf("\n Pedido realizado com sucesso!\n Dados do pedido:\n");
+            printf("===========================================================\n");
+            printf(" %-6s%-29s%-6s\t%s\n", "nº", "Nome", "Valor", "Quantidade");
+        }
+
+        i++;
+        cont++;
+    } while (pedido.id[i - 1] != 0);
+
+    k = 1;
+    for (i = 0; i < cont; i++)
+    {
+        FILE *itensCardapio = fopen("cardapio.txt", "r");
+        if (itensCardapio == NULL || pedidosCliente == NULL)
+        {
+            printf(" Erro ao tentar anotar o pedido.\n Tente novamente mais tarde!\n");
+            main();
+        }
+        else
+        {
+            do
             {
-                j = 0;
-                while (fscanf(itensCardapio, "%d;", &cardapio.id) != EOF)
+                fscanf(itensCardapio, "%d;", &cardapio.id);
+                // Lê tudo o que tem na linha, após o primeiro ";"
+                fscanf(itensCardapio, "%[^\n]", &cardapio.prato);
+
+                if (cardapio.id == pedido.id[i])
                 {
-                    j++;
-                    if (j == pedido.id[i])
+                    printf(" %-5d", cardapio.id);
+                    char *token = strtok(cardapio.prato, ";");
+                    j = 0;
+                    while (j < 2)
                     {
-                        printf("\nACHEI\n");
-
-                        printf("%d\t", i);
-                        printf("%[^\n]\t", pedido.nomeCliente);
-                        printf("%d\t", cardapio.id);
-                        printf("%.2f\n", cardapio.valor);
-
-                        // fprintf(pedidosCliente, "%d", i);
-                        // fprintf(pedidosCliente, "%[^\n]", pedido.nomeCliente);
-                        // fprintf(pedidosCliente, "%d", cardapio.id);
-                        // fprintf(pedidosCliente, "%.2f\n", cardapio.valor);
-                        break;
+                        if (j == 0)
+                        {
+                            printf(" %-29s", cardapio.prato);
+                        }
+                        else
+                        {
+                            cardapio.valor = atof(token);
+                            printf("R$ %.2f\t", cardapio.valor);
+                        }
+                        token = strtok(NULL, ";");
+                        j++;
                     }
-                    else
-                    {
-                        printf("\nNão achei\n");
-                    }
+                    valorTotal += (cardapio.valor * pedido.quant[i]);
+                    printf("%d\n", pedido.quant[i]);
+                    fclose(itensCardapio);
+                    k++;
                 }
-
-                // Ler linha
-                // fprintf(pedidosCliente, "%d", i);
-                // fprintf(pedidosCliente, "%[^\n]", nome_cliente);
-                // fprintf(pedidosCliente, "%d", cardapio.id);
-                // fprintf(pedidosCliente, "%.2f", cardapio.valor);
-            }
-            else
-            {
-                printf("\n Pedido realizado com sucesso!\n Dados do pedido:\n");
-            }
-
-            // printar:
-            // id_pedido
-            // nome_cliente
-            // id_prato
-            // valor_prato
-
-            i++;
-        } while (pedido.id[i - 1] != 0);
+            } while (cardapio.id != pedido.id[i] && k != cont);
+        }
     }
+    printf("===========================================================");
+    printf("\n VALOR TOTAL DO PEDIDO: R$ %.2f\n\n", valorTotal);
 
     fclose(pedidosCliente);
-    fclose(itensCardapio);
+    exit(0);
 }
 // Função para o cliente pedir a conta
 void historicoPedidos()
@@ -309,3 +312,5 @@ void historicoPedidos()
     }
     fclose(historicoPedidos);
 }
+
+// Fazer dois vetores e armazenar o id do produto e a quantidade
